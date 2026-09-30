@@ -34,16 +34,32 @@
                         </div>
                     }
 
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
+                            <i class="fa-solid fa-circle-check me-2"></i>@TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
                     @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "loginForm" }))
                     {
                         @Html.AntiForgeryToken()
 
-                        <!-- Email Input -->
+                        <!-- Email or Username Input -->
                         <div class="mb-3">
-                            <label class="form-label fw-semibold text-secondary">Email Address</label>
+                            <label class="form-label fw-semibold text-secondary">Email Address or Username</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0"><i class="fa-regular fa-envelope text-muted"></i></span>
-                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control bg-light border-start-0 rounded-end", placeholder = "name@example.com", type = "email", required = "required" })
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="fa-regular fa-user text-muted"></i>
+                                </span>
+                                @Html.TextBoxFor(m => m.Email, new
+                                {
+                                    @class = "form-control bg-light border-start-0 rounded-end",
+                                    placeholder = "Enter Username or Email",
+                                    type = "text",
+                                    required = "required"
+                                })
                             </div>
                             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small ms-1" })
                         </div>
@@ -55,10 +71,18 @@
                                 <a href="#" class="text-primary small text-decoration-none fw-semibold">Forgot?</a>
                             </div>
                             <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-lock text-muted"></i></span>
-                                @Html.PasswordFor(m => m.Password, new { @class = "form-control bg-light border-start-0 border-end-0", id = "passInput", placeholder = "Enter password", required = "required" })
-                                <button class="btn btn-light border border-start-0" type="button" onclick="togglePasswordVisibility('passInput', this.children[0])">
-                                    <i class="fa-regular fa-eye" id="toggleIcon"></i>
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="fa-solid fa-lock text-muted"></i>
+                                </span>
+                                @Html.PasswordFor(m => m.Password, new
+                                {
+                                    @class = "form-control bg-light border-start-0 border-end-0",
+                                    id = "passInput",
+                                    placeholder = "Enter password",
+                                    required = "required"
+                                })
+                                <button class="btn btn-light border border-start-0" type="button" onclick="togglePasswordVisibility('passInput', this.querySelector('i'))">
+                                    <i class="fa-regular fa-eye"></i>
                                 </button>
                             </div>
                             @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small ms-1" })
@@ -88,15 +112,13 @@
 
 @section scripts {
     <script>
-        function togglePasswordVisibility(inputId, icon) {
-            var input = document.getElementById(inputId);
-            if (!input || !icon) return;
-            var wasPassword = input.type === "password";
-            input.type = wasPassword ? "text" : "password";
-            // When it was a password and we made it visible, show the "eye-slash" (to allow hiding).
-            // When it was visible and we hid it, show the "eye" (to allow showing).
-            icon.classList.toggle("fa-eye-slash", wasPassword);
-            icon.classList.toggle("fa-eye", !wasPassword);
-        }
+                function togglePasswordVisibility(inputId, icon) {
+                    var input = document.getElementById(inputId);
+                    if (!input || !icon) return;
+                    var wasPassword = input.type === "password";
+                    input.type = wasPassword ? "text" : "password";
+                    icon.classList.toggle("fa-eye-slash", wasPassword);
+                    icon.classList.toggle("fa-eye", !wasPassword);
+                }
     </script>
 }

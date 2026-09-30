@@ -32,6 +32,7 @@ namespace GoKartWebApp.Controllers
             return View(products.ToList());
         }
 
+
         // GET: Home/ProductDetails/5
         public ActionResult ProductDetails(int id)
         {
