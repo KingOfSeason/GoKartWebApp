@@ -22,11 +22,23 @@ namespace GoKartWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingUser = db.Users.FirstOrDefault(u => u.Email == user.Email);
-                if (existingUser != null)
+                // Check if Email already exists
+                var existingEmail = db.Users.FirstOrDefault(u => u.Email == user.Email);
+                if (existingEmail != null)
                 {
                     ViewBag.Error = "Email ID pehle se registered hai!";
                     return View(user);
+                }
+
+                // Check if UserName already exists
+                if (!string.IsNullOrEmpty(user.UserName))
+                {
+                    var existingUserName = db.Users.FirstOrDefault(u => u.UserName == user.UserName);
+                    if (existingUserName != null)
+                    {
+                        ViewBag.Error = "Username pehle se liya gaya hai! Kripya doosra username chunein.";
+                        return View(user);
+                    }
                 }
 
                 if (string.IsNullOrEmpty(user.Role))
@@ -49,18 +61,20 @@ namespace GoKartWebApp.Controllers
             return View();
         }
 
-        // POST: Login (YEH CODE YAHA AAYEGA)
+        // POST: Login (Email YA Username dono se login chalega)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string email, string password)
+        public ActionResult Login(string usernameOrEmail, string password)
         {
-            var user = db.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
+            // Check karein ki entered value Email se match hoti hai YA Username se
+            var user = db.Users.FirstOrDefault(u =>
+                (u.Email == usernameOrEmail || u.UserName == usernameOrEmail) && u.Password == password);
 
-            // -------- YEH RAHA AAPKA CODE --------
             if (user != null)
             {
                 Session["UserID"] = user.UserID;
-                Session["UserName"] = user.FullName;
+                // Session me UserName set karein (agar empty hai toh FullName)
+                Session["UserName"] = string.IsNullOrEmpty(user.UserName) ? user.FullName : user.UserName;
                 Session["UserRole"] = user.Role;
 
                 // Case-insensitive role comparison (Admin/admin dono chalega)
@@ -73,9 +87,8 @@ namespace GoKartWebApp.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
-            // -------------------------------------
 
-            ViewBag.Error = "Invalid Email or Password!";
+            ViewBag.Error = "Invalid Username/Email or Password!";
             return View();
         }
 
