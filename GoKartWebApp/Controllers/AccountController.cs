@@ -62,34 +62,38 @@ namespace GoKartWebApp.Controllers
         }
 
         // POST: Login (Email YA Username dono se login chalega)
+        // POST: Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string usernameOrEmail, string password)
+        public ActionResult Login(LoginViewModel model)
         {
-            // Check karein ki entered value Email se match hoti hai YA Username se
-            var user = db.Users.FirstOrDefault(u =>
-                (u.Email == usernameOrEmail || u.UserName == usernameOrEmail) && u.Password == password);
-
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                Session["UserID"] = user.UserID;
-                // Session me UserName set karein (agar empty hai toh FullName)
-                Session["UserName"] = string.IsNullOrEmpty(user.UserName) ? user.FullName : user.UserName;
-                Session["UserRole"] = user.Role;
+                // Check karein ki entered text Email se match hota hai YA UserName se
+                var user = db.Users.FirstOrDefault(u =>
+                    (u.Email == model.Email || u.UserName == model.Email) && u.Password == model.Password);
 
-                // Case-insensitive role comparison (Admin/admin dono chalega)
-                if (string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+                if (user != null)
                 {
-                    return RedirectToAction("Index", "Admin");
+                    Session["UserID"] = user.UserID;
+                    Session["UserName"] = string.IsNullOrEmpty(user.UserName) ? user.FullName : user.UserName;
+                    Session["UserRole"] = user.Role;
+
+                    // Case-insensitive role check
+                    if (string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+
+                ViewBag.Error = "Invalid Username/Email or Password!";
             }
 
-            ViewBag.Error = "Invalid Username/Email or Password!";
-            return View();
+            return View(model);
         }
 
         // Logout
