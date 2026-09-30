@@ -1,0 +1,26 @@
+﻿@model IEnumerable<GoKartWebApp.Models.Product>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "My Wishlist";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold"><i class="fa-solid fa-heart text-danger me-2"></i>My Wishlist (@Model.Count())</h4>
+</div>
+
+<div class="row g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-3 text-center position-relative">
+                <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-3 text-danger"><i class="fa-solid fa-trash"></i></button>
+                <img src="@item.ImageUrl" class="card-img-top mx-auto" style="height: 140px; object-fit: contain;" />
+                <div class="card-body px-0 pb-0">
+                    <h6 class="fw-bold text-truncate">@item.ProductName</h6>
+                    <p class="text-primary fw-bold fs-5 mb-2">₹ @item.Price <small class="text-muted text-decoration-line-through fs-6">₹ @item.OriginalPrice</small></p>
+                    <button class="btn btn-primary w-100 rounded-3"><i class="fa-solid fa-cart-shopping me-2"></i>Move to Cart</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

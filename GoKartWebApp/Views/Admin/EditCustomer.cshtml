@@ -1,0 +1,35 @@
+﻿@model GoKartWebApp.Models.User
+@{
+    ViewBag.Title = "Edit Customer";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card border-0 shadow-sm rounded-4 p-4" style="max-width: 600px;">
+    <h4 class="fw-bold mb-4"><i class="fa-solid fa-user-gear text-primary me-2"></i>Edit Customer Details</h4>
+
+    @using (Html.BeginForm("EditCustomer", "Admin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.UserID)
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Full Name</label>
+            @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Email Address</label>
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", required = "required" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Role</label>
+            @Html.DropDownListFor(m => m.Role, new SelectList(new[] { "Customer", "Admin" }), new { @class = "form-select" })
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary px-4 rounded-pill fw-bold">Update Details</button>
+            <a href="@Url.Action("Customers", "Admin")" class="btn btn-light px-4 rounded-pill">Cancel</a>
+        </div>
+    }
+</div>

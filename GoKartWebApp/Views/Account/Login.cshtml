@@ -1,0 +1,102 @@
+﻿@model GoKartWebApp.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="row g-0">
+                <!-- Left Blue Section (Flipkart Banner) -->
+                <div class="col-md-5 text-white p-4 p-lg-5 d-flex flex-column justify-content-between" style="background: linear-gradient(135deg, #2874f0 0%, #0043a8 100%);">
+                    <div>
+                        <h2 class="fw-bold mb-3">Login</h2>
+                        <p class="fs-6 text-white-50">Get access to your Orders, Wishlist, and Personalized Recommendations</p>
+                    </div>
+                    <div class="text-center my-4">
+                        <i class="fa-solid fa-user-shield display-1 text-white-50 opacity-50"></i>
+                    </div>
+                    <div class="small text-white-50">
+                        <i class="fa-solid fa-shield-halved me-1 text-warning"></i> 100% Safe & Secure Login
+                    </div>
+                </div>
+
+                <!-- Right Form Section -->
+                <div class="col-md-7 p-4 p-lg-5 bg-white">
+                    <h4 class="fw-bold mb-4 text-dark">Welcome to GoKart</h4>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i>@ViewBag.Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "loginForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <!-- Email Input -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fa-regular fa-envelope text-muted"></i></span>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control bg-light border-start-0 rounded-end", placeholder = "name@example.com", type = "email", required = "required" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small ms-1" })
+                        </div>
+
+                        <!-- Password Input with Toggle -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label fw-semibold text-secondary">Password</label>
+                                <a href="#" class="text-primary small text-decoration-none fw-semibold">Forgot?</a>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-lock text-muted"></i></span>
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control bg-light border-start-0 border-end-0", id = "passInput", placeholder = "Enter password", required = "required" })
+                                <button class="btn btn-light border border-start-0" type="button" onclick="togglePasswordVisibility('passInput', this.children[0])">
+                                    <i class="fa-regular fa-eye" id="toggleIcon"></i>
+                                </button>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small ms-1" })
+                        </div>
+
+                        <!-- Terms Text -->
+                        <div class="form-text mb-4 text-muted small">
+                            By continuing, you agree to GoKart's <a href="#" class="text-primary text-decoration-none fw-semibold">Terms of Use</a> & <a href="#" class="text-primary text-decoration-none fw-semibold">Privacy Policy</a>.
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-warning w-100 py-3 fw-bold text-dark rounded-3 shadow-sm mb-3">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i> LOGIN
+                        </button>
+
+                        <!-- Register Redirect -->
+                        <div class="text-center mt-4 pt-3 border-top">
+                            <span class="text-muted small">New to GoKart?</span>
+                            <a href="@Url.Action("Register", "Account")" class="fw-bold text-primary text-decoration-none ms-1">Create an account</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function togglePasswordVisibility(inputId, icon) {
+            var input = document.getElementById(inputId);
+            if (!input || !icon) return;
+            var wasPassword = input.type === "password";
+            input.type = wasPassword ? "text" : "password";
+            // When it was a password and we made it visible, show the "eye-slash" (to allow hiding).
+            // When it was visible and we hid it, show the "eye" (to allow showing).
+            icon.classList.toggle("fa-eye-slash", wasPassword);
+            icon.classList.toggle("fa-eye", !wasPassword);
+        }
+    </script>
+}

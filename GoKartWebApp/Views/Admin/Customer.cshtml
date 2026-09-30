@@ -1,0 +1,57 @@
+﻿@model IEnumerable<GoKartWebApp.Models.User>
+@{
+    ViewBag.Title = "Customers Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="fw-bold mb-3">Customer Accounts</h3>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 p-4">
+    <table class="table align-middle">
+        <thead>
+            <tr class="text-muted">
+                <th>User ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var user in Model)
+                {
+                    <tr>
+                        <td>#@user.UserID</td>
+                        <td class="fw-bold">@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td><span class="badge bg-info text-dark">@user.Role</span></td>
+                        <td>
+                            <a href="@Url.Action("EditCustomer", "Admin", new { id = user.UserID })" class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1">
+                                <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                            <a href="@Url.Action("DeleteCustomer", "Admin", new { id = user.UserID })" onclick="return confirm('Delete this user account?');" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No customers registered yet.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

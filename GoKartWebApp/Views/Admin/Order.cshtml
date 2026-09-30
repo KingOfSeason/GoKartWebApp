@@ -1,0 +1,71 @@
+﻿@model IEnumerable<GoKartWebApp.Models.Order>
+@{
+    ViewBag.Title = "Orders Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="fw-bold mb-3">Orders Management</h3>
+
+<div class="card border-0 shadow-sm rounded-4 p-4">
+    <table class="table align-middle">
+        <thead>
+            <tr class="text-muted">
+                <th>Order No</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var order in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">#@order.OrderNumber</td>
+                        <td>@(order.User != null ? order.User.FullName : "Guest")</td>
+                        <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                        <td class="fw-bold text-success">₹ @order.TotalAmount</td>
+                        <td>
+                            <span class="badge @(order.Status == "Delivered" ? "bg-success" : order.Status == "Pending" ? "bg-warning text-dark" : "bg-primary")">
+                                @order.Status
+                            </span>
+                        </td>
+                        <td>
+                            @using (Html.BeginForm("UpdateOrderStatus", "Admin", FormMethod.Post, new { @class = "d-inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="orderId" value="@order.OrderID" />
+                                <select name="status" onchange="submitOrderStatus(this)" class="form-select form-select-sm d-inline-block w-auto rounded-pill">
+                                    <option value="Pending" @(order.Status == "Pending" ? "selected" : "")>Pending</option>
+                                    <option value="Shipped" @(order.Status == "Shipped" ? "selected" : "")>Shipped</option>
+                                    <option value="Delivered" @(order.Status == "Delivered" ? "selected" : "")>Delivered</option>
+                                    <option value="Cancelled" @(order.Status == "Cancelled" ? "selected" : "")>Cancelled</option>
+                                </select>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No orders found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        function submitOrderStatus(el) {
+            if (!el) return;
+            // Prefer the form property; fallback to walking up the DOM
+            var form = el.form || (function(e){ while (e && e.nodeName !== 'FORM') e = e.parentElement; return e; })(el);
+            if (form) form.submit();
+        }
+    </script>
+}

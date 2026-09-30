@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - GoKart Admin Dashboard</title>
+
+    <!-- Bootstrap 5 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --sidebar-bg: #0f172a;
+            --sidebar-active: #2563eb;
+            --body-bg: #f8fafc;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            color: #fff;
+            padding: 20px 15px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+            .sidebar .brand {
+                font-size: 1.4rem;
+                font-weight: 800;
+                padding: 10px 15px 25px 15px;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                margin-bottom: 20px;
+            }
+
+            .sidebar .nav-link {
+                color: #94a3b8;
+                padding: 12px 18px;
+                font-size: 0.95rem;
+                font-weight: 600;
+                border-radius: 10px;
+                margin-bottom: 6px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                transition: all 0.2s ease;
+            }
+
+                .sidebar .nav-link:hover, .sidebar .nav-link.active {
+                    background-color: var(--sidebar-active);
+                    color: #ffffff;
+                    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+                }
+
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 30px;
+        }
+
+        .admin-header {
+            background-color: #ffffff;
+            padding: 15px 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-wrapper">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-cart-shopping text-warning"></i> GoKart Admin
+            </div>
+            <nav class="nav flex-column">
+                <a href="@Url.Action("Index", "Admin")" class="nav-link @(ViewBag.Title == "Admin Dashboard" ? "active" : "")">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
+                <a href="@Url.Action("AddProduct", "Admin")" class="nav-link @(ViewBag.Title == "Add Product" ? "active" : "")">
+                    <i class="fa-solid fa-box"></i> Products & Upload
+                </a>
+                <a href="@Url.Action("Categories", "Admin")" class="nav-link @(ViewBag.Title == "Categories" ? "active" : "")">
+                    <i class="fa-solid fa-list"></i> Categories
+                </a>
+                <a href="@Url.Action("Orders", "Admin")" class="nav-link @(ViewBag.Title == "Orders Management" ? "active" : "")">
+                    <i class="fa-solid fa-cart-flatbed"></i> Orders
+                </a>
+                <a href="@Url.Action("Customers", "Admin")" class="nav-link @(ViewBag.Title == "Customers Management" ? "active" : "")">
+                    <i class="fa-solid fa-users"></i> Customers
+                </a>
+                <a href="@Url.Action("Logout", "Account")" class="nav-link text-danger mt-5">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </a>
+            </nav>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <div class="admin-header d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">@ViewBag.Title</h5>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-primary rounded-pill px-3 py-2">Role: Admin</span>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-sm btn-outline-secondary rounded-pill" target="_blank">
+                        <i class="fa-solid fa-globe me-1"></i> Visit Website
+                    </a>
+                </div>
+            </div>
+
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

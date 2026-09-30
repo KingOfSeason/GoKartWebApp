@@ -1,0 +1,97 @@
+﻿@model IEnumerable<GoKartWebApp.Models.Order>
+@{
+    ViewBag.Title = "Admin Dashboard";
+    var lowStock = ViewBag.LowStockAlerts as List<GoKartWebApp.Models.Product>;
+}
+
+<div class="container-fluid py-4">
+    <h2>Admin Dashboard</h2>
+    <p class="text-muted">Welcome back, Admin! Here's what's happening with your store today.</p>
+
+    <!-- Top KPI Cards[span_17](start_span)[span_17](end_span) -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 border-0 bg-primary text-white">
+                <h6>Total Orders</h6>
+                <h3>@ViewBag.TotalOrders</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 border-0 bg-success text-white">
+                <h6>Total Sales</h6>
+                <h3>₹ @ViewBag.TotalSales</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 border-0 bg-info text-white">
+                <h6>Total Customers</h6>
+                <h3>@ViewBag.TotalCustomers</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 border-0 bg-warning text-dark">
+                <h6>Total Products</h6>
+                <h3>@ViewBag.TotalProducts</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Recent Orders List[span_18](start_span)[span_18](end_span) -->
+        <div class="col-md-7">
+            <div class="card p-3 shadow-sm border-0">
+                <h5>Recent Orders</h5>
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.OrderNumber</td>
+                                <td>@item.User.FullName</td>
+                                <td>₹ @item.TotalAmount</td>
+                                <td><span class="badge bg-info">@item.Status</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Low Stock Alert[span_19](start_span)[span_19](end_span) -->
+        <div class="col-md-5">
+            <div class="card p-3 shadow-sm border-0">
+                <h5 class="text-danger">Low Stock Alert</h5>
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (lowStock != null)
+                        {
+                            foreach (var item in lowStock)
+                            {
+                                <tr>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.StockQuantity</td>
+                                    <td><span class="badge bg-danger">Low</span></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

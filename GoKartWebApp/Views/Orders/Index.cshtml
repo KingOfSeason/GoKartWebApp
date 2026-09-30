@@ -1,0 +1,79 @@
+﻿@model IEnumerable<GoKartWebApp.Models.Order>
+@{
+    ViewBag.Title = "My Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4">
+    <h3 class="fw-bold mb-4"><i class="fa-solid fa-box-open me-2 text-primary"></i>My Orders</h3>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row g-3">
+            @foreach (var order in Model)
+            {
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <!-- Order Header Banner -->
+                        <div class="card-header bg-light py-3 px-4 border-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
+                            <div>
+                                <span class="text-muted small d-block">ORDER PLACED</span>
+                                <span class="fw-bold text-dark">@order.OrderDate.ToString("dd MMM yyyy, hh:mm tt")</span>
+                            </div>
+                            <div>
+                                <span class="text-muted small d-block">TOTAL AMOUNT</span>
+                                <span class="fw-bold text-success">₹@order.TotalAmount</span>
+                            </div>
+                            <div>
+                                <span class="text-muted small d-block">ORDER ID</span>
+                                <span class="fw-bold text-dark">#@order.OrderNumber</span>
+                            </div>
+                            <div>
+                                <span class="badge @(order.Status == "Delivered" ? "bg-success" : order.Status == "Pending" ? "bg-warning text-dark" : order.Status == "Cancelled" ? "bg-danger" : "bg-primary") px-3 py-2 rounded-pill fs-7">
+                                    @order.Status
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Order Body -->
+                        <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            <div>
+                                <h6 class="fw-bold mb-1">Status: <span class="text-primary">@order.Status</span></h6>
+                                <p class="text-muted small mb-0">
+                                    @(order.Status == "Delivered" ? "Item has been successfully delivered." : "Your package is currently in process and will be delivered soon.")
+                                </p>
+                            </div>
+                            <div>
+                                <a href="@Url.Action("Details", "Orders", new { id = order.OrderID })" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-semibold">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- Empty State -->
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+            <i class="fa-solid fa-bag-shopping display-1 text-muted mb-3"></i>
+            <h4 class="fw-bold text-secondary">You haven't placed any orders yet!</h4>
+            <p class="text-muted">Explore our catalog and start shopping now.</p>
+            <div class="mt-3">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary rounded-pill px-4 py-2 fw-semibold">
+                    Start Shopping
+                </a>
+            </div>
+        </div>
+    }
+</div>

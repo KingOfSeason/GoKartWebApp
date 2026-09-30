@@ -1,0 +1,46 @@
+﻿@model IEnumerable<GoKartWebApp.Models.Product>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "All Products";
+}
+
+<div class="card border-0 shadow-sm rounded-4 p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold"><i class="fa-solid fa-boxes-stacked me-2 text-primary"></i>Product Inventory</h4>
+        <a href="@Url.Action("AddProduct", "Admin")" class="btn btn-primary rounded-3"><i class="fa-solid fa-plus me-2"></i>Add New Product</a>
+    </div>
+
+    <table class="table align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td><img src="@p.ImageUrl" width="45" height="45" class="rounded-3 border" style="object-fit:contain;" /></td>
+                    <td class="fw-bold">@p.ProductName</td>
+                    <td><span class="badge bg-light text-dark border">@p.Category</span></td>
+                    <td class="fw-bold text-success">₹ @p.Price</td>
+                    <td>
+                        @if (p.StockQuantity <= 15)
+                        {<span class="badge bg-danger">Low: @p.StockQuantity</span> }
+                    else
+                    { <span class="badge bg-success">@p.StockQuantity in stock</span>}
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .fk-auth-card {
+        max-width: 780px;
+        margin: 40px auto;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px 0 rgba(0,0,0,.2);
+        background: #fff;
+    }
+
+    .fk-auth-left {
+        background-color: #2874f0;
+        color: #fff;
+        padding: 40px 30px;
+    }
+
+    .fk-auth-right {
+        padding: 40px 35px;
+    }
+</style>
+
+<div class="fk-auth-card">
+    <div class="row g-0">
+        <!-- Left Banner -->
+        <div class="col-md-5 fk-auth-left d-flex flex-column justify-content-between">
+            <div>
+                <h3 class="fw-bold">Looks like you're new here!</h3>
+                <p class="text-white-50 mt-3">Sign up with your details to get started with GoKart</p>
+            </div>
+            <div class="text-center">
+                <i class="fa-solid fa-user-plus display-1 text-white-50"></i>
+            </div>
+        </div>
+
+        <!-- Right Form -->
+        <div class="col-md-7 fk-auth-right">
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger py-2 fs-6">@ViewBag.Error</div>
+            }
+
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control border-0 border-bottom rounded-0" id="FullName" name="FullName" placeholder="Full Name" required>
+                    <label for="FullName">Full Name</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control border-0 border-bottom rounded-0" id="Email" name="Email" placeholder="name@example.com" required>
+                    <label for="Email">Email Address</label>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input type="password" class="form-control border-0 border-bottom rounded-0" id="Password" name="Password" placeholder="Password" required>
+                    <label for="Password">Password</label>
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100 fw-bold py-2 text-white shadow-sm" style="background-color: #fb641b; border: none;">
+                    CONTINUE
+                </button>
+
+                <div class="text-center mt-4">
+                    <a href="@Url.Action("Login", "Account")" class="btn btn-light w-100 fw-bold text-primary border shadow-sm py-2">
+                        Existing User? Log in
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

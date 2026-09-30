@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - GoKart Online Shopping</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --fk-blue: #2874f0;
+            --fk-yellow: #ffe500;
+            --bg-gray: #f1f3f6;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .fk-header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .fk-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--fk-blue);
+            text-decoration: none;
+            font-style: italic;
+            line-height: 1;
+        }
+
+            .fk-brand span {
+                color: #f59e0b;
+                font-size: 0.75rem;
+                display: block;
+                margin-top: 2px;
+                font-style: normal;
+            }
+
+        .fk-search-input {
+            background-color: #f0f5ff;
+            border: 1px solid transparent;
+            border-radius: 8px 0 0 8px;
+            padding: 10px 16px;
+        }
+
+            .fk-search-input:focus {
+                background-color: #fff;
+                box-shadow: none;
+                border-color: var(--fk-blue);
+            }
+
+        .fk-search-btn {
+            background-color: #f0f5ff;
+            border: 1px solid transparent;
+            border-radius: 0 8px 8px 0;
+            color: var(--fk-blue);
+            padding: 0 20px;
+        }
+
+        .fk-nav-btn {
+            color: #212121;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+            .fk-nav-btn:hover {
+                background-color: #2874f0;
+                color: #ffffff !important;
+            }
+
+        /* Category Strip */
+        .category-strip {
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cat-item {
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 12px 14px;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+            .cat-item i {
+                font-size: 1.3rem;
+                display: block;
+                margin-bottom: 4px;
+                color: var(--fk-blue);
+            }
+
+            .cat-item:hover, .cat-item.active {
+                color: var(--fk-blue);
+                border-bottom: 2px solid var(--fk-blue);
+            }
+
+        footer {
+            background-color: #172337;
+            color: #878787;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP HEADER -->
+    <header class="fk-header py-2">
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <!-- Brand Logo -->
+                <div class="col-auto">
+                    <a href="@Url.Action("Index", "Home")" class="fk-brand">
+                        GoKart
+                        <span>Plus Explore <i class="fa-solid fa-plus text-warning"></i></span>
+                    </a>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="col mx-md-3">
+                    @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "d-flex" }))
+                    {
+                        <input type="text" name="search" value="@ViewBag.SearchQuery" class="form-control fk-search-input" placeholder="Search for Products, Brands and More" />
+                        <button type="submit" class="btn fk-search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    }
+                </div>
+
+                <!-- Action Nav Links -->
+                <div class="col-auto d-flex align-items-center gap-2">
+                    @if (Session["UserName"] != null)
+                    {
+                        <div class="dropdown">
+                            <button class="btn fk-nav-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fa-regular fa-circle-user me-1"></i> @Session["UserName"]
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                                <li><a class="dropdown-item" href="@Url.Action("Orders", "Admin")"><i class="fa-solid fa-box me-2 text-primary"></i>My Orders</a></li>
+                                @if (Session["UserRole"]?.ToString() == "Admin")
+                                {
+                                    <li><a class="dropdown-item" href="@Url.Action("Index", "Admin")"><i class="fa-solid fa-user-shield me-2 text-warning"></i>Admin Panel</a></li>
+                                }
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="@Url.Action("Logout", "Account")"><i class="fa-solid fa-power-off me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Login", "Account")" class="btn fk-nav-btn border">
+                            <i class="fa-regular fa-user me-1"></i> Login
+                        </a>
+                    }
+
+                    <a href="@Url.Action("Index", "Cart")" class="btn fk-nav-btn position-relative">
+                        <i class="fa-solid fa-cart-shopping me-1"></i> Cart
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @(Session["CartCount"] ?? 0)
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CATEGORIES STRIP -->
+    <div class="category-strip">
+        <div class="container-fluid px-4">
+            <div class="d-flex justify-content-between overflow-auto text-nowrap">
+                <a href="@Url.Action("Index", "Home")" class="cat-item @(ViewBag.SelectedCategory == null ? "active" : "")">
+                    <i class="fa-solid fa-border-all"></i> All Products
+                </a>
+                <a href="@Url.Action("Index", "Home", new { category = "Mobiles" })" class="cat-item @(ViewBag.SelectedCategory == "Mobiles" ? "active" : "")">
+                    <i class="fa-solid fa-mobile-screen-button"></i> Mobiles
+                </a>
+                <a href="@Url.Action("Index", "Home", new { category = "Fashion" })" class="cat-item @(ViewBag.SelectedCategory == "Fashion" ? "active" : "")">
+                    <i class="fa-solid fa-shirt"></i> Fashion
+                </a>
+                <a href="@Url.Action("Index", "Home", new { category = "Electronics" })" class="cat-item @(ViewBag.SelectedCategory == "Electronics" ? "active" : "")">
+                    <i class="fa-solid fa-laptop"></i> Electronics
+                </a>
+                <a href="@Url.Action("Index", "Home", new { category = "Home & Furniture" })" class="cat-item @(ViewBag.SelectedCategory == "Home & Furniture" ? "active" : "")">
+                    <i class="fa-solid fa-couch"></i> Home & Furniture
+                </a>
+                <a href="@Url.Action("Index", "Home", new { category = "Appliances" })" class="cat-item @(ViewBag.SelectedCategory == "Appliances" ? "active" : "")">
+                    <i class="fa-solid fa-tv"></i> Appliances
+                </a>
+                <a href="@Url.Action("Index", "Home", new { category = "Beauty & Toys" })" class="cat-item @(ViewBag.SelectedCategory == "Beauty & Toys" ? "active" : "")">
+                    <i class="fa-solid fa-icons"></i> Beauty & Toys
+                </a>
+                <a href="@Url.Action("Index", "Home", new { category = "Two Wheelers" })" class="cat-item @(ViewBag.SelectedCategory == "Two Wheelers" ? "active" : "")">
+                    <i class="fa-solid fa-motorcycle"></i> Two Wheelers
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN BODY -->
+    <main class="py-4">
+        <div class="container-fluid px-4">
+            @RenderBody()
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto py-4">
+        <div class="container-fluid px-4">
+            <div class="row g-4 text-white-50">
+                <div class="col-md-3">
+                    <h6 class="text-white fw-bold mb-3">ABOUT</h6>
+                    <p class="mb-0">GoKart E-Commerce platform providing top quality items with fastest delivery.</p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-white fw-bold mb-3">HELP</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="#" class="text-white-50 text-decoration-none">Payments</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Shipping</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Cancellation & Returns</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-white fw-bold mb-3">POLICY</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="#" class="text-white-50 text-decoration-none">Terms Of Use</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Security</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Privacy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-white fw-bold mb-3">SOCIAL</h6>
+                    <div class="d-flex gap-3 fs-5 text-white">
+                        <i class="fa-brands fa-facebook"></i>
+                        <i class="fa-brands fa-twitter"></i>
+                        <i class="fa-brands fa-youtube"></i>
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 border-secondary" />
+            <div class="text-center text-white-50">
+                &copy; @DateTime.Now.Year GoKart.com. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

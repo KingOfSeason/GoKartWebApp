@@ -1,0 +1,85 @@
+﻿@model IEnumerable<GoKartWebApp.Models.Order>
+@{
+    ViewBag.Title = "User Dashboard";
+    var recommended = ViewBag.RecommendedProducts as List<GoKartWebApp.Models.Product>;
+}
+
+<div class="container-fluid py-4">
+    <h2>Welcome Back, @ViewBag.UserName!</h2>
+    <p class="text-muted">Here's what's happening with your account today.</p>
+
+    <!-- Stat Cards[span_14](start_span)[span_14](end_span) -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 bg-light">
+                <h6>Total Orders</h6>
+                <h4>@ViewBag.TotalOrders</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 bg-light">
+                <h6>Total Spent</h6>
+                <h4>₹ @ViewBag.TotalSpent</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 bg-light">
+                <h6>Wishlist Items</h6>
+                <h4>@ViewBag.WishlistCount</h4>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 bg-light">
+                <h6>Available Coupons</h6>
+                <h4>@ViewBag.AvailableCoupons</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders Table[span_15](start_span)[span_15](end_span) -->
+    <div class="card p-3 shadow-sm border-0 mb-4">
+        <h5 class="mb-3">Recent Orders</h5>
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><b>@item.OrderNumber</b></td>
+                        <td>@item.OrderDate.ToString("dd MMM yyyy")</td>
+                        <td><span class="badge bg-success">@item.Status</span></td>
+                        <td>₹ @item.TotalAmount</td>
+                        <td><a href="#" class="btn btn-sm btn-outline-primary">Track Order</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Recommended For You[span_16](start_span)[span_16](end_span) -->
+    <h5 class="mb-3">Recommended For You</h5>
+    <div class="row g-3">
+        @if (recommended != null)
+        {
+            foreach (var item in recommended)
+            {
+                <div class="col-md-2">
+                    <div class="card p-2 text-center shadow-sm border-0">
+                        <img src="@item.ImageUrl" class="card-img-top mx-auto" style="height: 100px; object-fit: contain;" alt="@item.ProductName" />
+                        <h6 class="mt-2 text-truncate">@item.ProductName</h6>
+                        <p class="mb-1 text-primary"><b>₹ @item.Price</b> <small class="text-muted text-decoration-line-through">₹ @item.OriginalPrice</small></p>
+                        <button class="btn btn-sm btn-primary w-100">Add to Cart</button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<GoKartWebApp.Controllers.CategoryViewModel>
+@{
+    ViewBag.Title = "Categories";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="fw-bold mb-3">Product Categories</h3>
+
+<div class="card border-0 shadow-sm rounded-4 p-4">
+    <table class="table align-middle">
+        <thead>
+            <tr class="text-muted">
+                <th>Category Name</th>
+                <th>Total Products</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-bold"><i class="fa-solid fa-folder text-warning me-2"></i>@item.CategoryName</td>
+                        <td><span class="badge bg-primary rounded-pill px-3 py-2">@item.TotalProducts Products</span></td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="2" class="text-center text-muted">No categories found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
